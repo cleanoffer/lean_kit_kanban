@@ -4,18 +4,21 @@ module LeanKitRequest
   end
 
   module ClassMethods
-    REPLY_DATA_KEY  = "ReplyData"
+    REPLY_DATA_KEY  = 'ReplyData'
 
     private
+
     def get(api_call)
+      debug_output LeanKitKanban::Config.debug == true ? $stdout : nil
       url      = "#{LeanKitKanban::Config.uri}#{api_call}"
       response = super(url, LeanKitKanban::Config.basic_auth_hash)
       parse_body(response.body)
     end
 
     def post(api_call, body)
+      debug_output LeanKitKanban::Config.debug == true ? $stdout : nil
       url = "#{LeanKitKanban::Config.uri}#{api_call}"
-      headers("Content-Type" => "application/json")
+      headers('Content-Type' => 'application/json')
       request = LeanKitKanban::Config.basic_auth_hash
       request[:body] = body.to_json
       response = super(url, request)
@@ -23,6 +26,7 @@ module LeanKitRequest
     end
 
     def parse_body(body)
+      debug_output LeanKitKanban::Config.debug == true ? $stdout : nil
       json_data = JSON.parse(body)
       json_data[REPLY_DATA_KEY]
     end
